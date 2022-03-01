@@ -1,3 +1,4 @@
+
 const express = require('express') 
 const cors = require('cors');
 const app = express()  
@@ -48,8 +49,8 @@ const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 
 // List of items we are selling (database or JSON file)
 const storeItems = new Map([
-  [1, { priceInCents: 10000, name: "Learn React Today" }],
-  [2, { priceInCents: 15000, name: "Learn CSS Today" }],
+  [1, { priceInCents: 10000, tittle: "Learn React Today" }],
+  [2, { priceInCents: 15000, tittle: "Learn CSS Today" }],
 ])
 
 // Post request for /create-checkout-session
@@ -63,12 +64,13 @@ app.post("/create-checkout-session", async (req, res) => {
         // For each item use the id to get it's information
         // Take that information and convert it to Stripe's format
         line_items: req.body.items.map(({ id, quantity }) => {
+          console.log(storeItems.get(id).tittle)
           const storeItem = storeItems.get(id)
           return {
             price_data: {
               currency: "usd",
               product_data: {
-                name: storeItem.name,
+                name: storeItem,
               },
               unit_amount: storeItem.priceInCents,
             },
@@ -79,10 +81,10 @@ app.post("/create-checkout-session", async (req, res) => {
         mode: "payment",
 
         //  CLIENT_URL
-        success_url: `${process.env.CLIENT_URL}/success.html`,
-        cancel_url: `${process.env.CLIENT_URL}/cancel.html`,
+        success_url: `${process.env.CLIENT_URL}/success`,
+        cancel_url: `${process.env.CLIENT_URL}/cancel`,
       })
-  
+      
       res.json({ url: session.url })
     } catch (e) {
       // If there is an error send it to the client
@@ -91,11 +93,23 @@ app.post("/create-checkout-session", async (req, res) => {
   }) 
   
 app.get("/success", (req, res) => {
-    res.json("success")
+  try {   
+    res.json("success") 
+  } 
+  catch (error) {
+    res.json(error)
+  }
+  
 })
 
-app.get("/cancle",(req, res) => {
-    res.json("success")
+app.get("/cancle",(req, res) => { 
+  try {   
+    res.json("cancled") 
+  } 
+  catch (error) {
+    res.json(error)
+  }
 })
+
 // Port 
 app.listen(port)
