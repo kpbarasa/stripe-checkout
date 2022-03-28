@@ -53,7 +53,7 @@ Stripe checkout api
 
       ATLAS_URI=mongodb+srv://<UserName>:<password>.4p1ws.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 
-      STRIPE_PRIVATE_KEY=sk_test_SM2z6QB6POe73q1ODaWbseD0008FLkWplY
+      STRIPE_PRIVATE_KEY=<secrete keye here>
       
       CLIENT_URL=http://localhost:5000
     
